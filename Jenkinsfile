@@ -1,4 +1,5 @@
 
+
 pipeline {
   agent any
   tools {
@@ -29,6 +30,10 @@ pipeline {
     }
     stage('deploy on prod') {
       steps {
+        input {
+            message "should we continue ?"
+            ok "yes we should"
+        }
         deploy adapters: [
             tomcat9(
                 credentialsId: 'testing', 
