@@ -30,10 +30,7 @@ pipeline {
     }
     stage('deploy on prod') {
       steps {
-        input {
-            message "should we continue ?"
-            ok "yes we should"
-        }
+        input message: 'continue ?', ok: 'yes'
         deploy adapters: [
             tomcat9(
                 credentialsId: 'testing', 
