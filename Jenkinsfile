@@ -1,45 +1,28 @@
-
-
-pipeline {
-  agent any
-  tools {
-        maven 'Maven'
+    pipeline{
+        agent any
+        tools {
+        maven 'Maven' 
     }
-  stages {
-    stage('test') {
-      steps {
-        sh 'mvn test'
-      }
-    }
-    stage('build') {
-      steps {
-        sh 'mvn package'
-      }
-    }
-    stage('deoloy on test') {
-       steps{
-        deploy adapters: [
-            tomcat9(
-                credentialsId: 'testing', 
-                path: '', 
-                url: 'http://13.201.89.139:8080'
-            )
-        ], contextPath: '/app', 
-        war: '**/*.war'
-       }
-    }
-    stage('deploy on prod') {
-      steps {
-        input message: 'continue ?', ok: 'yes'
-        deploy adapters: [
-            tomcat9(
-                credentialsId: 'testing', 
-                path: '', 
-                url: 'http://13.126.159.208:8080/'
-            )
-        ], contextPath: '/app', 
-        war: '**/*.war'
-      }
-    }
-  }
+        stages{
+            stage("test"){
+                steps{
+                    sh "mvn test"
+                }
+            }
+            stage("build"){
+                steps{
+                    sh "mvn package"
+                }
+            }
+             stage("deploy-on-test"){
+                steps{
+                   deploy adapters: [tomcat9(credentialsId: 'tomcatdetail', path: '', url: 'http://34.204.49.50:8080')], contextPath: null, war: '**/*.war'
+                }
+            }
+            stage("deploy on prod"){
+                steps{
+                   deploy adapters: [tomcat9(credentialsId: 'tomcatdetail', path: '', url: 'http://54.227.104.77:8080')], contextPath: null, war: '**/*.war'
+                }
+            }
+        }
 }
